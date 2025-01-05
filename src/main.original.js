@@ -57,8 +57,8 @@ function main() {
 
   calcCart();
 
-  setTimeout(function () {
-    setInterval(function () {
+  setTimeout(() => {
+    setInterval(() => {
       var luckyItem=prodList[Math.floor(Math.random() * prodList.length)];
       if(Math.random() < 0.3 && luckyItem.q > 0) {
         luckyItem.val=Math.round(luckyItem.val * 0.8);
@@ -66,10 +66,11 @@ function main() {
         updateSelOpts();
       }
     }, 30000);
+
   }, Math.random() * 10000);
 
-  setTimeout(function () {
-    setInterval(function () {
+  setTimeout(() => {
+    setInterval(() => {
       if(lastSel) {
         var suggest=prodList.find(function (item) { return item.id !== lastSel && item.q > 0; });
         if(suggest) {
@@ -101,7 +102,7 @@ function calcCart() {
   var subTot=0;
 
   for (var i=0; i < cartItems.length; i++) {
-    (function () {
+
       var curItem;
 
       for (var j=0; j < prodList.length; j++) {
@@ -126,7 +127,7 @@ function calcCart() {
       }
 
       totalAmt += itemTot * (1 - disc);
-    })();
+
   }
 
   let discRate=0;
@@ -181,7 +182,7 @@ const renderBonusPts=() => {
 function updateStockInfo() {
   var infoMsg='';
 
-  prodList.forEach(function (item) {
+  prodList.forEach((item) => {
     if(item.q < 5) {
       infoMsg += item.name + ': ' + (item.q > 0 ? '재고 부족 ('+item.q+'개 남음)' : '품절') + '\n';
     }
@@ -194,7 +195,7 @@ main();
 
 addBtn.addEventListener('click', function () {
   var selItem=sel.value;
-  var itemToAdd=prodList.find(function (p) { return p.id === selItem; });
+  var itemToAdd = prodList.find((p) => p.id === selItem)
   
   if(itemToAdd && itemToAdd.q > 0) {
     var item=document.getElementById(itemToAdd.id);
@@ -231,7 +232,7 @@ cartDisp.addEventListener('click', function (event) {
   if(tgt.classList.contains('quantity-change') || tgt.classList.contains('remove-item')) {
     var prodId=tgt.dataset.productId;
     var itemElem=document.getElementById(prodId);
-    var prod=prodList.find(function (p) { return p.id === prodId; });
+    var prod=prodList.find((p) => p.id === prodId);
 
     if(tgt.classList.contains('quantity-change')) {
       var qtyChange=parseInt(tgt.dataset.change);
