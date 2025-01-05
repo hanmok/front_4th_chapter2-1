@@ -175,7 +175,7 @@ function calcCart() {
   renderPointsLabel();
 }
 
-const renderPointsLabel = () => {
+function renderPointsLabel() {
   points = Math.floor(totalAmount / 1000);
   let pointsLabel = document.getElementById('loyalty-points');
 
@@ -187,7 +187,7 @@ const renderPointsLabel = () => {
   }
 
   pointsLabel.textContent = '(포인트: ' + points + ')';
-};
+}
 
 function updateStockInfo() {
   let infoMesssage = '';
