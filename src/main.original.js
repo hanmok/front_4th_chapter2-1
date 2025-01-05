@@ -15,9 +15,9 @@ function main() {
   ];
 
   const root = document.getElementById('app');
-  const cont = document.createElement('div');
-  const wrap = document.createElement('div');
-  const hTxt = document.createElement('h1');
+  const content = document.createElement('div');
+  const wrapper = document.createElement('div');
+  const header = document.createElement('h1');
 
   cartDisp = document.createElement('div');
   cartDisp.id = 'cart-items';
@@ -39,25 +39,25 @@ function main() {
   stockInfo.id = 'stock-status';
   stockInfo.className = 'text-sm text-gray-500 mt-2';
 
-  hTxt.className = 'text-2xl font-bold mb-4';
-  hTxt.textContent = '장바구니';
+  header.className = 'text-2xl font-bold mb-4';
+  header.textContent = '장바구니';
 
   updateSelOpts();
 
-  wrap.className =
+  wrapper.className =
     'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8';
 
-  wrap.appendChild(hTxt);
-  wrap.appendChild(cartDisp);
-  wrap.appendChild(sum);
-  wrap.appendChild(sel);
-  wrap.appendChild(addBtn);
-  wrap.appendChild(stockInfo);
+  wrapper.appendChild(header);
+  wrapper.appendChild(cartDisp);
+  wrapper.appendChild(sum);
+  wrapper.appendChild(sel);
+  wrapper.appendChild(addBtn);
+  wrapper.appendChild(stockInfo);
 
-  cont.className = 'bg-gray-100 p-8';
-  cont.appendChild(wrap);
+  content.className = 'bg-gray-100 p-8';
+  content.appendChild(wrapper);
 
-  root.appendChild(cont);
+  root.appendChild(content);
 
   calcCart();
 
