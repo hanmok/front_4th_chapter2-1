@@ -40,7 +40,7 @@ function main() {
   header.className = 'text-2xl font-bold mb-4';
   header.textContent = '장바구니';
 
-  updateSelOpts();
+  updateSelectionOptions();
 
   wrapper.className =
     'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8';
@@ -66,7 +66,7 @@ function main() {
       if (Math.random() < 0.3 && luckyItem.quantity > 0) {
         luckyItem.price = Math.round(luckyItem.price * 0.8);
         alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
-        updateSelOpts();
+        updateSelectionOptions();
       }
     }, 30000);
   }, Math.random() * 10000);
@@ -74,30 +74,31 @@ function main() {
   setTimeout(() => {
     setInterval(() => {
       if (lastSelectedItem) {
-        const suggest = productList.find(
+        const suggestingItem = productList.find(
           (item) => item.id !== lastSelectedItem && item.quantity > 0,
         );
-        if (suggest) {
+        if (suggestingItem) {
           alert(
-            suggest.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!',
+            suggestingItem.name +
+              '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!',
           );
-          suggest.price = Math.round(suggest.price * 0.95);
-          updateSelOpts();
+          suggestingItem.price = Math.round(suggestingItem.price * 0.95);
+          updateSelectionOptions();
         }
       }
     }, 60000);
   }, Math.random() * 20000);
 }
 
-function updateSelOpts() {
+function updateSelectionOptions() {
   selectionBox.innerHTML = '';
 
   productList.forEach((item) => {
-    const opt = document.createElement('option');
-    opt.value = item.id;
-    opt.textContent = item.name + ' - ' + item.price + '원';
-    if (item.quantity === 0) opt.disabled = true;
-    selectionBox.appendChild(opt);
+    const optionElement = document.createElement('option');
+    optionElement.value = item.id;
+    optionElement.textContent = item.name + ' - ' + item.price + '원';
+    if (item.quantity === 0) optionElement.disabled = true;
+    selectionBox.appendChild(optionElement);
   });
 }
 
