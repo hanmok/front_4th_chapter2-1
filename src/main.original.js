@@ -63,6 +63,7 @@ function main() {
     setInterval(() => {
       const luckyItem =
         productList[Math.floor(Math.random() * productList.length)];
+
       if (Math.random() < 0.3 && luckyItem.quantity > 0) {
         luckyItem.price = Math.round(luckyItem.price * 0.8);
         alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
@@ -77,6 +78,7 @@ function main() {
         const suggestingItem = productList.find(
           (item) => item.id !== lastSelectedItem && item.quantity > 0,
         );
+
         if (suggestingItem) {
           alert(
             suggestingItem.name +
@@ -96,7 +98,7 @@ function updateSelectionOptions() {
   productList.forEach((item) => {
     const optionElement = document.createElement('option');
     optionElement.value = item.id;
-    optionElement.textContent = item.name + ' - ' + item.price + '원';
+    optionElement.textContent = `${item.name} - ${item.price}원`;
     if (item.quantity === 0) optionElement.disabled = true;
     selectionBox.appendChild(optionElement);
   });
@@ -161,12 +163,15 @@ function updateCart() {
     discountRate = Math.max(discountRate, 0.1);
   }
 
-  sum.textContent = '총액: ' + Math.round(totalCost) + '원';
+  const roundedTotalCost = Math.round(totalCost);
+
+  sum.textContent = `총액: ${roundedTotalCost}원`;
 
   if (discountRate > 0) {
     const span = document.createElement('span');
     span.className = 'text-green-500 ml-2';
-    span.textContent = '(' + (discountRate * 100).toFixed(1) + '% 할인 적용)';
+    const discountPercent = (discountRate * 100).toFixed(1);
+    span.textContent = `(${discountPercent}% 할인 적용)`;
     sum.appendChild(span);
   }
 
@@ -185,21 +190,22 @@ function renderPointsLabel() {
     sum.appendChild(pointsLabel);
   }
 
-  pointsLabel.textContent = '(포인트: ' + points + ')';
+  pointsLabel.textContent = `(포인트: ${points})`;
 }
 
 function updateStockInfo() {
   let infoMesssage = '';
 
+  const createInfoMessage = (item) => {
+    if (item.quantity > 0) {
+      return `${item.name}: 재고 부족 (${item.quantity}개 남음)`;
+    }
+    return `${item.name}: 품절`;
+  };
+
   productList.forEach((item) => {
     if (item.quantity < 5) {
-      infoMesssage +=
-        item.name +
-        ': ' +
-        (item.quantity > 0
-          ? '재고 부족 (' + item.quantity + '개 남음)'
-          : '품절') +
-        '\n';
+      infoMesssage += createInfoMessage(item) + '\n';
     }
   });
 
@@ -220,7 +226,7 @@ addBtn.addEventListener('click', () => {
         parseInt(item.querySelector('span').textContent.split('x ')[1]) + 1;
       if (newQuantity <= itemToAdd.quantity) {
         item.querySelector('span').textContent =
-          itemToAdd.name + ' - ' + itemToAdd.price + '원 x ' + newQuantity;
+          `${itemToAdd.name} - ${itemToAdd.price}원 x ${newQuantity}`;
         itemToAdd.quantity--;
       } else {
         alert('재고가 부족합니다.');
@@ -266,22 +272,23 @@ cartDisplay.addEventListener('click', (event) => {
 
     if (target.classList.contains('quantity-change')) {
       const quantityChange = parseInt(target.dataset.change);
-      const newQuantity =
-        parseInt(itemElement.querySelector('span').textContent.split('x ')[1]) +
-        quantityChange;
+
+      const itemName = itemElement
+        .querySelector('span')
+        .textContent.split('x ')[0];
+      const currentQuantity = parseInt(
+        itemElement.querySelector('span').textContent.split('x ')[1],
+      );
+
+      const newQuantity = currentQuantity + quantityChange;
 
       if (
         newQuantity > 0 &&
-        newQuantity <=
-          product.quantity +
-            parseInt(
-              itemElement.querySelector('span').textContent.split('x ')[1],
-            )
+        newQuantity <= product.quantity + currentQuantity
       ) {
         itemElement.querySelector('span').textContent =
-          itemElement.querySelector('span').textContent.split('x ')[0] +
-          'x ' +
-          newQuantity;
+          `${itemName}x ${newQuantity}`;
+
         product.quantity -= quantityChange;
       } else if (newQuantity <= 0) {
         itemElement.remove();
@@ -293,7 +300,6 @@ cartDisplay.addEventListener('click', (event) => {
       const removingQuantity = parseInt(
         itemElement.querySelector('span').textContent.split('x ')[1],
       );
-      console.log(`removeQuantity: ${removingQuantity}`);
       product.quantity += removingQuantity;
       itemElement.remove();
     }
