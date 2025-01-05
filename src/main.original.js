@@ -209,7 +209,7 @@ main();
 
 addBtn.addEventListener('click', () => {
   const selectedItem = selectionBox.value;
-  let itemToAdd = productList.find((p) => p.id === selectedItem);
+  let itemToAdd = productList.find((product) => product.id === selectedItem);
 
   if (itemToAdd && itemToAdd.quantity > 0) {
     const item = document.getElementById(itemToAdd.id);
@@ -261,7 +261,7 @@ cartDisplay.addEventListener('click', (event) => {
   ) {
     const productId = target.dataset.productId;
     const itemElement = document.getElementById(productId);
-    const product = productList.find((p) => p.id === productId);
+    const product = productList.find((product) => product.id === productId);
 
     if (target.classList.contains('quantity-change')) {
       const quantityChange = parseInt(target.dataset.change);
