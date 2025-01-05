@@ -2,8 +2,8 @@ var productList, selectionBox, addBtn, cartDisplay, sum, stockInfo;
 
 var lastSelectedItem,
   points = 0,
-  totalAmount = 0,
-  itemCount = 0;
+  totalCost = 0,
+  cartItemCount = 0;
 
 function main() {
   productList = [
@@ -59,7 +59,7 @@ function main() {
 
   root.appendChild(content);
 
-  calcCart();
+  updateCart();
 
   setTimeout(() => {
     setInterval(() => {
@@ -103,12 +103,12 @@ function updateSelOpts() {
   });
 }
 
-function calcCart() {
-  totalAmount = 0;
-  itemCount = 0;
+function updateCart() {
+  totalCost = 0;
+  cartItemCount = 0;
 
   const cartItems = cartDisplay.children;
-  let subTotal = 0;
+  let subTotalCost = 0;
 
   for (let i = 0; i < cartItems.length; i++) {
     let currentItem;
@@ -120,17 +120,17 @@ function calcCart() {
       }
     }
 
-    const quantity = parseInt(
+    const itemQuantity = parseInt(
       cartItems[i].querySelector('span').textContent.split('x ')[1],
     );
 
-    const itemTotal = currentItem.price * quantity;
+    const currentItemCost = currentItem.price * itemQuantity;
     let discount = 0;
 
-    itemCount += quantity;
-    subTotal += itemTotal;
+    cartItemCount += itemQuantity;
+    subTotalCost += currentItemCost;
 
-    if (quantity >= 10) {
+    if (itemQuantity >= 10) {
       if (currentItem.id === 'p1') discount = 0.1;
       else if (currentItem.id === 'p2') discount = 0.15;
       else if (currentItem.id === 'p3') discount = 0.2;
@@ -138,31 +138,31 @@ function calcCart() {
       else if (currentItem.id === 'p5') discount = 0.25;
     }
 
-    totalAmount += itemTotal * (1 - discount);
+    totalCost += currentItemCost * (1 - discount);
   }
 
   let discountRate = 0;
 
-  if (itemCount >= 30) {
-    const bulkDiscount = totalAmount * 0.25;
-    const itemDiscount = subTotal - totalAmount;
+  if (cartItemCount >= 30) {
+    const bulkDiscount = totalCost * 0.25;
+    const itemDiscount = subTotalCost - totalCost;
 
     if (bulkDiscount > itemDiscount) {
-      totalAmount = subTotal * (1 - 0.25);
+      totalCost = subTotalCost * (1 - 0.25);
       discountRate = 0.25;
     } else {
-      discountRate = (subTotal - totalAmount) / subTotal;
+      discountRate = (subTotalCost - totalCost) / subTotalCost;
     }
   } else {
-    discountRate = (subTotal - totalAmount) / subTotal;
+    discountRate = (subTotalCost - totalCost) / subTotalCost;
   }
 
   if (new Date().getDay() === 2) {
-    totalAmount *= 1 - 0.1;
+    totalCost *= 1 - 0.1;
     discountRate = Math.max(discountRate, 0.1);
   }
 
-  sum.textContent = '총액: ' + Math.round(totalAmount) + '원';
+  sum.textContent = '총액: ' + Math.round(totalCost) + '원';
 
   if (discountRate > 0) {
     const span = document.createElement('span');
@@ -176,7 +176,7 @@ function calcCart() {
 }
 
 function renderPointsLabel() {
-  points = Math.floor(totalAmount / 1000);
+  points = Math.floor(totalCost / 1000);
   let pointsLabel = document.getElementById('loyalty-points');
 
   if (!pointsLabel) {
@@ -249,7 +249,7 @@ addBtn.addEventListener('click', () => {
       itemToAdd.quantity--;
     }
 
-    calcCart();
+    updateCart();
     lastSelectedItem = selectedItem;
   }
 });
@@ -299,6 +299,6 @@ cartDisplay.addEventListener('click', (event) => {
       itemElement.remove();
     }
 
-    calcCart();
+    updateCart();
   }
 });
