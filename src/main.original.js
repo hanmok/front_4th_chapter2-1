@@ -1,9 +1,7 @@
 var productList, selectionBox, addBtn, cartDisplay, sum, stockInfo;
 
 var lastSelectedItem,
-  points = 0,
-  totalCost = 0,
-  cartItemCount = 0;
+  totalCost = 0;
 
 function main() {
   productList = [
@@ -105,7 +103,7 @@ function updateSelOpts() {
 
 function updateCart() {
   totalCost = 0;
-  cartItemCount = 0;
+  let cartItemCount = 0;
 
   const cartItems = cartDisplay.children;
   let subTotalCost = 0;
@@ -176,7 +174,7 @@ function updateCart() {
 }
 
 function renderPointsLabel() {
-  points = Math.floor(totalCost / 1000);
+  let points = Math.floor(totalCost / 1000);
   let pointsLabel = document.getElementById('loyalty-points');
 
   if (!pointsLabel) {
